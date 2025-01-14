@@ -1,0 +1,15 @@
+{% extends 'petapp/base.html' %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <!-- Render Django form -->
+    {{ form.as_p }}
+    
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+    <a href="{% url 'pet_detail' pet.id %}" class="btn btn-warning">
+        No, take me back
+    </a>
+</form>
+{% endblock %}

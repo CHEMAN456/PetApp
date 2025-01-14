@@ -1,0 +1,33 @@
+{% extends 'petapp/base.html' %}
+
+{% block content %}
+
+<div class  = "container">
+    <div class = "row">
+        <div class = "col-md-4 offset-md-4">
+            <div class = "card">
+                <div class = "card-header text-white bg-info">
+                    <div class = "card-title">
+                        
+                    </div>    
+                </div>
+                <div class = "card-body">
+                    <form method = "POST">
+                        {% csrf_token %}
+                        <h6>Are you sure you want to logout?</h6>
+                        <button type  class = "btn btn-success btn-sm"= "submit"> Confirm </button>
+                    </form>    
+                    
+                </div>
+            </div>        
+        </div>  
+    </div>  
+</div>
+
+
+
+
+
+
+
+{% endblock %}

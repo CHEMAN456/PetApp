@@ -1,0 +1,28 @@
+{% extends 'petapp/base.html' %}
+
+{% block content%}
+    <form method = 'POST'>
+        {% csrf_token %}
+        <h3>Confirm the order</h3>
+        <button type = "submit">Confirm</button>
+    </form><br>
+    <button>
+        <a href = "{% url 'view_cart' %}">
+            No,Take me Back
+        </a>    
+    </button>    
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

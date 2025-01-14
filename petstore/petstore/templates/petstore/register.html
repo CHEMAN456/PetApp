@@ -1,0 +1,44 @@
+{% extends 'petapp/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="card">
+                <div class="card-header text-white bg-info">
+                    <div class="card-title">
+                        Sign Up
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for field, errors in form.errors.items %}
+                                        <li>{{ field }}: {{ errors|join:", " }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <label>Username: </label><br>
+                        {{ form.username }}
+
+                        
+                        <br><label>Password: </label><br>
+                        {{ form.password1 }}
+
+                        <br><label>Confirm Password: </label><br>
+                        {{ form.password2 }}
+
+                        <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
