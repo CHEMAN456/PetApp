@@ -36,6 +36,7 @@ urlpatterns = [
     path('cart/add/<int:pk>/',add_to_cart,name='cart'),
     path('cart/',view_cart,name='view_cart'),
     path('update_cart/<int:pk>/',update_cart,name='update'),
-    path('payment/',payment,name='payment')
+    path('payment/',payment,name='payment'),
+    path('api/',include('petapp.api_urls')),
   
 ] + static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

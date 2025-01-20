@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'petapp',
-    'petstore', 
+    'petstore',
+    'rest_framework', 
 ]
 LOGIN_REDIRECT_URL = '/pets'
 

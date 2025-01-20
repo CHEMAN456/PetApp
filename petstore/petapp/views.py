@@ -1,5 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
 from django.core.paginator import Paginator
+from rest_framework import generics
+from .serializers import Petserializer
 from django.http import Http404
 from django.views import View
 from django.contrib import messages
@@ -116,8 +118,14 @@ def pet_delete(request,pk=None):
     return render(request,'petapp/pet_delete.html',context)
 
 
+class PetListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Pet.objects.all()
+    serializer_class = Petserializer
 
-    
+
+class PetRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Pet.objects.all() 
+    serializer_class = Petserializer   
             
             
         
