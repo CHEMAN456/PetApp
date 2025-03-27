@@ -28,6 +28,7 @@ def pet_list(request):
     
     return render(request,'petapp/pet_list.html',{'page_obj':page_obj})
 
+
 def pet_detail_view(request,pk=None,*args, **kwargs):
     
     qs = Pet.objects.filter(id=pk)
@@ -127,7 +128,55 @@ class PetRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pet.objects.all() 
     serializer_class = Petserializer   
             
+
+
+
+
+
+
+
+
+
+        
+          
+          
+        
+    
+    
+    
+    
+         
+        
+
+    
             
+            
+
+    
+        
+    
+    
+
+
+    
+    
+    
+         
+    
+        
+           
+
+        
+    
+        
+    
+    
+    
+    
+    
+    
+    
+                
         
     
     

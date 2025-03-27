@@ -40,7 +40,7 @@
     <div class="text-end">
         <h3>Total Price: ₹{{ total_price|floatformat:2 }}</h3>
     </div>
-    <a href="{% url 'payment' %}" class="btn btn-success">Make Payment</a>
+    <a href="{% url 'paypal_payment' %}" class="btn btn-success">Make Payment</a>
     <a href="{% url 'pet_list' %}" class="btn btn-primary">Continue Shopping</a>
 </div>
 {% endblock %}

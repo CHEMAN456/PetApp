@@ -1,0 +1,44 @@
+{% extends 'petapp/base.html' %}
+
+{% block content %}
+    <h2>Sales Analytics Dashboard</h2>
+    <p><strong>Total Revenue:</strong> ${{ total_revenue }}</p>
+
+    <h3>Best Selling Products</h3>
+    <canvas id="salesChart" width="400" height="200"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    
+    <script>
+        // Pass Django data to JavaScript
+        var productNames = [];
+        var productSales = [];
+
+        {% for product in best_selling_products %}
+            productNames.push("{{ product.cart_items__pet__name }}");
+            productSales.push({{ product.total_sold }});
+        {% endfor %}
+
+        // Render Chart
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',  // Change to 'pie' or 'line' if needed
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Total Sales',
+                    data: productSales,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+{% endblock %}

@@ -14,5 +14,5 @@ urlpatterns = [
     path('additem/',views.create_item,name='add_item'),
     path('delete/<int:pk>',views.pet_delete,name='delete'),
       
-]+ static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 

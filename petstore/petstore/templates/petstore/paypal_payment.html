@@ -1,0 +1,37 @@
+{% extends 'petapp/base.html' %}
+
+{% block content %}
+<h2 class="text-center">Pay with PayPal</h2>
+<p>Total Amount: ₹{{ total_amount }}</p>
+
+<div id="paypal-button-container"></div>
+
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
+<script>
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ total_amount }}'
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Redirect to success page
+                window.location.href = "{% url 'payment_success' %}";
+            });
+        },
+        onCancel: function(data) {
+            // Redirect to cancel page
+            window.location.href = "{% url 'payment_cancel' %}";
+        },
+        onError: function(err) {
+            console.error(err);
+            alert("An error occurred during payment.");
+        }
+    }).render('#paypal-button-container');
+</script>
+{% endblock %}

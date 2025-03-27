@@ -5,3 +5,7 @@ class Petserializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = '__all__'
+
+
+
+            

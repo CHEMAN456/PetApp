@@ -20,7 +20,7 @@ from petapp import views
 from petapp.views import MyView
 from django.conf import settings
 from django.conf.urls.static import static
-from petstore.views import register_view,login_view,logout_view,edit_pet,pet_review,add_to_cart,view_cart,update_cart,payment
+from petstore.views import register_view,login_view,logout_view,edit_pet,pet_review,add_to_cart,view_cart,update_cart,payment,paypal_payment,payment_success,payment_cancel,sales_dashboard
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
@@ -38,5 +38,10 @@ urlpatterns = [
     path('update_cart/<int:pk>/',update_cart,name='update'),
     path('payment/',payment,name='payment'),
     path('api/',include('petapp.api_urls')),
+    path('make_payment/', paypal_payment, name='paypal_payment'),
+    path('payment_success/', payment_success, name='payment_success'),
+    path('payment_cancel/', payment_cancel, name='payment_cancel'),
+    path('dashboard/', sales_dashboard , name = 'dashboard')
+    
   
 ] + static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

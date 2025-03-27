@@ -1,6 +1,7 @@
 {% extends 'petapp/base.html' %}
 
 {% block content %}
+
     <form  method = 'POST'>
         {% csrf_token %}
         <h3>Are you sure you want to delete {{ pet.name }} </h3>
