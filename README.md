@@ -8,6 +8,8 @@ An e-commerce web application for a pet store, built with Django and Django REST
 📄 Pagination: Smooth browsing experience with paginated views.
 📦 Order Management: Place and track pet orders easily.
 📂 Admin Dashboard: Manage pets, users, and orders through Django Admin.
+💳 Payment Gateway Integration: Secure payments using Paypal.
+📊 Sales Analytics Dashboard : Visual insights into revenue and best selling products.
 
 🛠️ Tech Stack
 Backend: Python, Django, Django REST Framework (DRF)
@@ -38,7 +40,6 @@ python manage.py runserver
 ![Screenshot 2025-01-17 181951](https://github.com/user-attachments/assets/e9049b25-26c4-4db1-8822-a39908792f08)
 
 📚 Future Enhancements
-💳 Payment Gateway Integration
 🔔 Email Notifications for Orders
 🐕 Pet Adoption Feature
 🌐 Deployment on Heroku or AWS
