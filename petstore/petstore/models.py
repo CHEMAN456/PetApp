@@ -39,6 +39,26 @@ class Order(models.Model):
         return f"Order #{self.id} by {self.user.username}"
     
 
+class Profile(models.Model):
+    
+    user = models.ForeignKey(User,on_delete = models.CASCADE)
+    image = models.ImageField(default='profilepic.jpg', upload_to = 'pictures/profilepic')
+    location = models.CharField(default='location',max_length=100)
+    user_type = models.CharField(max_length=50)
+    
+    def save(self,*args, **kwargs):
+        if self.user.is_superuser:
+            self.user_type = 'superuser'
+        elif self.user.is_staff:
+            self.user_type = 'staff'
+        else:
+            self.user_type = 'customer'        
+
+        super().save(*args, **kwargs)  # ✅ Forwards extra arguments safely
+                                        # ✅ Saves the Profile instance
+    
+    def __str__(self):
+        return f'{self.user.username}'
 
     
     

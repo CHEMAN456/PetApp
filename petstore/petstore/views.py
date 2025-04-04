@@ -8,11 +8,13 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib import messages
 from django.views import View
 from petapp.models import Pet
-from petstore.models import Review,Cart,Order
+from petstore.models import Review,Cart,Order,Profile,User
 from django.urls import reverse
 from petapp.forms import ItemForm
-from petstore.forms import ReviewForm
+from petstore.forms import ReviewForm,ProfformCreating,ProfformEditing,Profile
 from django.contrib.auth.forms import UserCreationForm
+
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -197,24 +199,6 @@ def payment(request):
     return render(request, 'petstore/payment.html')
 
 
-            
-
-
-
-            
-
-        
-
-
-
-
-
-
-
-
-  
-
-
         
         
 def update_cart(request,pk):
@@ -297,8 +281,44 @@ def sales_dashboard(request):
         'product_sales': product_sales,
     })
 
+@login_required
+def Profile_Create(request):
+    user = request.user  # Get the logged-in user
 
+    # Try to fetch the existing profile or create one if it doesn't exist
+    prof, created = Profile.objects.get_or_create(user=user)  
 
+    if request.method == "POST":
+        form = ProfformCreating(request.POST, request.FILES, instance=prof)  # ✅ Use instance=prof
+        if form.is_valid():
+            form.save()  # ✅ Updates the existing profile instead of creating a new one
+            messages.success(request,f'Profile {user} Updated Successfully')
+            return redirect("profile_view")  # Redirect after saving
+
+    else:
+        form = ProfformCreating(instance=prof)  # ✅ Prefill form with existing data
+
+    context = {"form": form, "prof": prof}
+    return render(request, "petstore/prof_create.html", context)
+    
+    
+@login_required
+def profile_view(request):
+    try:
+        profile = Profile.objects.get(user = request.user)  
+    except Profile.DoesNotExist():
+        return redirect('profile')
+    
+    return render(request,'petstore/prof_view.html',{'profile':profile})
+
+      
+    
+    
+    
+    
+    
+    
+    
                     
             
         
