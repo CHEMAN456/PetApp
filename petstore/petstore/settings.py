@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'petapp',
+    'petstore',
     'rest_framework', 
     "paypal.standard.ipn",
 ]
