@@ -2,7 +2,7 @@ from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.db.models import Sum,Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib import messages
@@ -146,28 +146,39 @@ def view_cart(request):
 
     return render(request, 'petstore/add_cart.html', {'cart_data': cart_data, 'total_price': total_price})
 
-
 def update_cart(request, pk):
-    
     if request.method == "POST":
-        cart_item = get_object_or_404(Cart, pk=pk , user=request.user)
-        
+        cart_item = get_object_or_404(Cart, pk=pk, user=request.user)
+
         try:
             quantity = int(request.POST.get('quantity', 0))
             if 0 <= quantity <= 3:
                 if quantity == 0:
                     cart_item.delete()
-                    messages.success(request, f"'{cart_item.pet.name}' removed from your cart.")
+                    message = f"'{cart_item.pet.name}' removed from your cart."
                 else:
                     cart_item.quantity = quantity
                     cart_item.save()
-                    messages.success(request, f"Quantity for '{cart_item.pet.name}' updated to {quantity}.")
+                    message = f"Quantity for '{cart_item.pet.name}' updated to {quantity}."
             else:
-                messages.error(request, "Quantity must be between 0 and 3.")
+                return JsonResponse({'error': "Quantity must be between 0 and 3."})
         except ValueError:
-            messages.error(request, "Invalid quantity. Please enter a valid number.")
-           
-        return redirect('view_cart')
+            return JsonResponse({'error': "Invalid quantity. Please enter a valid number."})
+
+        # Recalculate totals
+        cart_items = Cart.objects.filter(user=request.user)
+        grand_total = sum(item.pet.price * item.quantity for item in cart_items)
+        updated_total = cart_item.pet.price * quantity if quantity else 0
+
+        return JsonResponse({
+            'message': message,
+            'updated_total': f"{updated_total:.2f}",
+            'grand_total': f"{grand_total:.2f}"
+        })
+
+    return JsonResponse({'error': "Invalid request method."})
+
+
 
 def payment(request):
     
@@ -198,34 +209,7 @@ def payment(request):
 
     return render(request, 'petstore/payment.html')
 
-
-        
-        
-def update_cart(request,pk):
-    
-    if request.method == 'POST':
-        
-        cart_item = get_object_or_404(Cart,user = request.user, pk=pk)
-                    
-        try:
-            quantity = int(request.POST.get('quantity',0))
-            
-            if 0 <= quantity <= 3:
-                if quantity == 0:
-                    cart_item.delete()
-                    messages.success(request,f'Cart Item Deleted Successfully for {cart_item.pet.id} ')
-                else:
-                    cart_item.quantity = quantity
-                    cart_item.save()
-                    messages.success(request,f'Quantity Updated Successfully for {cart_item.pet.id}')
-            else:
-                messages.error(request,'Quantity must be between 0 and 3 ')
-        
-        except ValueError:
-            messages.error(request,'Invalid Quantiy,Please Enter in digits')
-        
-        return redirect('view_cart')
-    
+  
 
 @login_required
 def paypal_payment(request):

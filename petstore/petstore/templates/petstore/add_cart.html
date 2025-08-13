@@ -3,6 +3,10 @@
 {% block content %}
 <div class="container mt-4">
     <h1 class="text-center">Your Cart</h1>
+
+    <!-- CSRF token for JavaScript -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
     <table class="table table-dark table-striped-columns">
         <thead>
             <tr>
@@ -11,7 +15,6 @@
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Total</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -20,15 +23,16 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{ entry.item.pet.name }}</td>
                 <td>₹{{ entry.item.pet.price }}</td>
-                <td>{{ entry.item.quantity }}</td>
-                <td>₹{{ entry.total }}</td>
                 <td>
-                    <form method="post" action="{% url 'update' entry.item.id %}" style="display: inline;">
-                        {% csrf_token %}
-                        <input type="number" name="quantity" value="{{ entry.item.quantity }}" min="0" max="3" class="form-control d-inline" style="width: 60px;">
-                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                    </form>
-                </td> 
+                    <input type="number"
+                           name="quantity"
+                           value="{{ entry.item.quantity }}"
+                           min="0" max="3"
+                           class="form-control d-inline quantity-input"
+                           style="width: 60px;"
+                           data-item-id="{{ entry.item.id }}">
+                </td>
+                <td class="item-total" id="item-total-{{ entry.item.id }}">₹{{ entry.total }}</td>
             </tr>
             {% empty %}
             <tr>
@@ -37,12 +41,51 @@
             {% endfor %}
         </tbody>
     </table>
+
     <div class="text-end">
-        <h3>Total Price: ₹{{ total_price|floatformat:2 }}</h3>
+        <h3>Total Price: ₹<span id="grandTotal">{{ total_price|floatformat:2 }}</span></h3>
     </div>
+
     <a href="{% url 'paypal_payment' %}" class="btn btn-success">Make Payment</a>
     <a href="{% url 'pet_list' %}" class="btn btn-primary">Continue Shopping</a>
 </div>
+
+<!-- JavaScript to auto-update quantity -->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    document.querySelectorAll(".quantity-input").forEach(input => {
+        input.addEventListener("input", () => {
+            const itemId = input.dataset.itemId;
+            const quantity = input.value;
+
+            fetch(`/update_cart/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({ quantity: quantity })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById(`item-total-${itemId}`).textContent = `₹${data.updated_total}`;
+                    document.getElementById("grandTotal").textContent = data.grand_total;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Something went wrong. Please try again.");
+            });
+        });
+    });
+});
+
+</script>
+
 {% endblock %}
-
-
