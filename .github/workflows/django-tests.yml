@@ -35,5 +35,5 @@ jobs:
 
       - name: Run tests
         run: |
-          cd petstore/petstore
+          cd petstore
           python manage.py test
