@@ -30,7 +30,7 @@ jobs:
         
       - name: Run migrations
         run: |
-          cd petstore/petstore
+          cd petstore
           python manage.py migrate
 
       - name: Run tests
