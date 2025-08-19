@@ -23,7 +23,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install Pillow
+          pip install Pillow coverage
 
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$PWD/petstore" >> $GITHUB_ENV
@@ -33,13 +33,20 @@ jobs:
           cd petstore
           python manage.py migrate
 
-      - name: Run tests
+      - name: Run Django tests
         run: |
           cd petstore
           python manage.py test
-      
+
       - name: Run tests with coverage
         run: |
           cd petstore
           coverage run --source='.' manage.py test
-          coverage report -m    
+          coverage report -m
+          coverage html
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: petstore/htmlcov
