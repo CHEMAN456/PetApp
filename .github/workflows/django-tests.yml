@@ -37,3 +37,9 @@ jobs:
         run: |
           cd petstore
           python manage.py test
+      
+      - name: Run tests with coverage
+        run: |
+          cd petstore
+          coverage run --source='.' manage.py test
+          coverage report -m    

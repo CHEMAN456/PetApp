@@ -19,6 +19,7 @@ class MyView(View):
     def get(self,request):
         return HttpResponse('Hello from class based view')
     
+    
 def pet_list(request):
     mymodels = Pet.objects.all().order_by('price')
     
@@ -71,7 +72,7 @@ def pet_range_view(request):
     except ValueError:
         r1, r2, items_per_page = 0, 20000, 3
 
-    pet_range = Pet.pets.get_pets_price_range(r1, r2)
+    pet_range = Pet.pets.get_pets_price_range(r1, r2).order_by('price','name')
     paginator = Paginator(pet_range, items_per_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -80,7 +81,6 @@ def pet_range_view(request):
         'page_obj': page_obj,
         'request': request  # Pass request explicitly to the template
     })
-
 
 
 def create_item(request):

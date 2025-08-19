@@ -64,8 +64,6 @@ def login_view(request):
     return render(request, 'petstore/login.html' )
 
 
-
-
 def logout_view(request):
     
     if request.method == 'POST':
@@ -80,9 +78,7 @@ def logout_view(request):
     return render(request,'petstore/logout.html')
 
 
-
-
-
+@login_required
 def edit_pet(request, pk):
     pet = get_object_or_404(Pet, pk=pk)  # Get the specific pet by its primary key
     if request.method == "POST":
@@ -94,9 +90,7 @@ def edit_pet(request, pk):
         form = ItemForm(instance=pet)
     return render(request, 'petstore/pet_edit.html', {'form': form, 'pet': pet})
 
-
-
-
+@login_required
 def pet_review(request, pk):
     # Get the pet object
     pet = get_object_or_404(Pet, pk=pk)
@@ -121,6 +115,7 @@ def pet_review(request, pk):
     # Render the review template
     return render(request, 'petstore/pet_review.html', {'pet': pet, 'form': form})
 
+@login_required
 def add_to_cart(request,pk):
     pet = get_object_or_404(Pet, pk=pk)
     cart_item,created = Cart.objects.get_or_create(user=request.user,pet=pet)
@@ -129,7 +124,7 @@ def add_to_cart(request,pk):
         cart_item.save()
     return redirect('view_cart')  
   
-
+@login_required
 def view_cart(request):
     
     cart_items = Cart.objects.filter(user=request.user)
@@ -146,6 +141,7 @@ def view_cart(request):
 
     return render(request, 'petstore/add_cart.html', {'cart_data': cart_data, 'total_price': total_price})
 
+@login_required
 def update_cart(request, pk):
     if request.method == "POST":
         cart_item = get_object_or_404(Cart, pk=pk, user=request.user)
